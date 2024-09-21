@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@api": ["api/index.ts"],
+      "@model/*": ["model/*"],
+      "@controller/*": ["controller/*"],
+      "@shemas/*": ["schemas/*"],
+      "@interfaces": ["interfaces/index.ts"],
+      "@validation/*": ["validation/*"],
+      "@db": ["db/knex.ts"]
+    },
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "noImplicitAny": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+}
