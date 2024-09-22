@@ -19,12 +19,15 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@express-rate-limit/tsconfig": "^1.0.2",
     "@types/body-parser": "^1.19.5",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.5.5",
     "@types/pg": "^8.11.10",
     "@types/uuid": "^10.0.0",
@@ -34,6 +37,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "module-alias": "^2.2.3",
     "mysql": "^2.18.1",
@@ -44,11 +49,16 @@
   },
   "_moduleAliases": {
     "@model": "dist/model",
+    "@utils": "dist/utils",
     "@controller": "dist/controller",
     "@shemas": "dist/schemas",
+    "@db": "dist/db",
+    "@config": "dist/config/settings.js",
+    "@data": "dist/data",
     "@interfaces": "dist/interfaces/index.js",
     "@validation": "dist/validation",
-    "@db": "dist/db/knex.js",
+    "@dbinstance": "dist/db/knex.js",
+    "@middleware": "dist/middleware/index.js",
     "@api": "dist/api/index.js"
   }
 }

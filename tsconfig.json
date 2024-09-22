@@ -8,16 +8,22 @@
     "paths": {
       "@api": ["api/index.ts"],
       "@model/*": ["model/*"],
+      "@utils/*": ["utils/*"],
       "@controller/*": ["controller/*"],
       "@shemas/*": ["schemas/*"],
+      "@db/*": ["db/*"],
+      "@data/*": ["data/*"],
+      "@config": ["config/settings.ts"],
       "@interfaces": ["interfaces/index.ts"],
       "@validation/*": ["validation/*"],
-      "@db": ["db/knex.ts"]
+      "@dbinstance": ["db/knex.ts"],
+      "@middleware": ["middleware/index.ts"]
     },
     "outDir": "dist",
     "skipLibCheck": true,
     "sourceMap": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "resolveJsonModule": true
   },
   "include": ["./**/*"],
   "exclude": ["node_modules"]

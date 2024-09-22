@@ -1,0 +1,6 @@
+{
+  "levels": {
+    "admin": ["private", "public"],
+    "user": ["public"]
+  }
+}

@@ -1,13 +1,13 @@
 import { Request, Response } from "express"
 import { v4 as uuidv4 } from "uuid"
-import { CreateCar, GetCars } from "@model/Car"
+import { CreateCar, DeleteCar, GetCars, UpdateCar } from "@model/Car"
 import { ICarEntity } from "@interfaces"
 import { validate } from "@validation/validate"
-import { carSchema } from "@shemas/carShema"
-import { parseQueryParams } from "../utils/queryUtils"
+import { carSchema, deleteCarSchema, updateCarSchema } from "@shemas/carShema"
+import { parseQueryParams } from "@utils/queryUtils"
 
 /**
- * Create new car
+ * Создаем новую машину
  * @param req
  * @param res
  */
@@ -15,10 +15,6 @@ async function create(req: Request, res: Response) {
   // Валидация данных автомобиля
   let data = validate(carSchema, req.body, res)
 
-  // Если данные не прошли валидацию, прерываем выполнение
-  if (!data) return
-
-  // Генерация UUID для нового автомобиля
   const valid_data: ICarEntity = {
     id: uuidv4(),
     brand: data.brand,
@@ -28,47 +24,65 @@ async function create(req: Request, res: Response) {
     vin: data.vin,
   }
 
-  try {
-    // Создание записи в базе данных
-    const createdCar = await CreateCar(valid_data)
-    // Ответ с успешным созданием автомобиля
-    res.status(201).send({
-      message: "Car successfully created!",
-      carId: createdCar.id,
-    })
-  } catch (error) {
-    res.status(500).send({
-      message: "Error creating car",
-      error: error.message,
-    })
-  }
+  const car = await CreateCar(valid_data)
+
+  res.status(201).send({
+    message: "Car successfully created!",
+    carId: car.id,
+  })
 }
 
 /**
- * Get list of cars with optional filters and pagination
+ * Берем список машин с необходимой фильтрацией
  * @param req
  * @param res
  */
 async function get(req: Request, res: Response) {
-  try {
-    const filter = parseQueryParams<ICarEntity>(req.query, {
-      limit: 20,
-      offset: 0,
-      search: null,
-    })
+  const filter = parseQueryParams<ICarEntity>(req.query, {
+    limit: 20,
+    offset: 0,
+    search: null,
+  })
 
-    const cars = await GetCars(filter)
+  const cars = await GetCars(filter)
 
-    res.status(200).send({
-      message: "Cars retrieved successfully",
-      cars: cars,
-    })
-  } catch (error) {
-    res.status(500).send({
-      message: "Error getting cars",
-      error: error.message,
-    })
-  }
+  res.status(200).send({ ...cars })
 }
 
-export { create, get }
+/**
+ * Частичное обновление данных машины
+ * @param req
+ * @param res
+ */
+async function update(req: Request, res: Response) {
+  const data = validate(
+    updateCarSchema,
+    {
+      id: req.params.id,
+      body: req.body,
+    },
+    res
+  )
+
+  const { id, body } = data
+
+  const _updated = await UpdateCar(id, body)
+
+  res.status(200).send({
+    message: "Car successfully updated!",
+    car: _updated,
+  })
+}
+
+async function remove(req: Request, res: Response) {
+  // Validate car ID from req.params
+  const data = validate(deleteCarSchema, req.params, res)
+
+  await DeleteCar(data.id)
+
+  res.status(200).send({
+    message: "Car successfully deleted!",
+  })
+}
+
+export { create, get, update, remove }

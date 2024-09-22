@@ -7,19 +7,15 @@ import http from "http"
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
 import compression from "compression"
-import cors from "cors"
 import REST_API from "@api"
+import { CorsSettings, ApiLimiter } from "@config"
 
 const app = express()
 const PORT = process.env.SERVER_PORT || 8080
-import knex from "@db"
+import knex from "@dbinstance"
 
-app.use(
-  cors({
-    credentials: true,
-  })
-)
-
+app.use(CorsSettings)
+app.use(ApiLimiter)
 app.use(compression())
 app.use(cookieParser())
 app.use(bodyParser.json())

@@ -3,11 +3,7 @@ import { Response } from "express"
 import { handleValidationError } from "./errorHandler"
 
 // Универсальная функция для валидации данных
-export function validate<T>(
-  schema: ZodSchema<T>,
-  data: unknown,
-  res: Response
-): T | void {
+export function validate<T>(schema: ZodSchema<T>, data: any, res: Response): T {
   try {
     return schema.parse(data) // Валидация данных
   } catch (error) {
@@ -18,5 +14,7 @@ export function validate<T>(
         errors: validationErrors,
       })
     }
+    // Early return to stop controller execution if validation fails
+    throw new Error("Validation failed")
   }
 }

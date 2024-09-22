@@ -1,10 +1,11 @@
-import knex from "@db"
+import knex from "@dbinstance"
 import { ICarEntity } from "@interfaces"
 import { DatabaseSchema } from "db/schemas/DataBaseSchema"
+import { Knex } from "knex"
 
-export const db = () => knex("car")
+const db = () => knex("car")
 
-export const CreateCar = async (data: ICarEntity) => {
+const CreateCar = async (data: ICarEntity) => {
   const car = await knex<DatabaseSchema["car"]>("car")
     .insert(data)
     .returning("id")
@@ -15,17 +16,46 @@ export const CreateCar = async (data: ICarEntity) => {
   return data
 }
 
-export const GetCars = async (filter: Partial<ICarEntity>) => {
-  const query = knex<DatabaseSchema["car"]>("car").select("*")
+const GetCars = async (filter: Partial<ICarEntity>) => {
+  const { limit = 20, offset = 0, ..._rest_filter } = filter
 
-  const { limit, offset, ...rest_filter } = filter
-  console.log(filter)
+  const _query = knex<DatabaseSchema["car"]>("car")
 
-  //динамически вставляем фильтр параметры
-  Object.entries(rest_filter).forEach(([key, value]) => {
+  applyFilters(_query, _rest_filter)
+
+  const _count_query = _query
+    .clone()
+    .clearSelect()
+    .count({ total: "*" })
+    .first()
+
+  _query.limit(limit).offset(offset)
+
+  const [cars, { total }] = await Promise.all([
+    _query.select("*"),
+    _count_query,
+  ])
+
+  return {
+    cars,
+    total,
+  }
+}
+
+const UpdateCar = async (id: string, data: Partial<DatabaseSchema["car"]>) => {
+  return await knex<DatabaseSchema["car"]>("car").where({ id }).update(data)
+}
+
+//жесткое удаление
+const DeleteCar = async (id: string): Promise<void> => {
+  return await knex<DatabaseSchema["car"]>("car").where({ id }).del()
+}
+
+const applyFilters = (query: any, filters: Partial<ICarEntity>) => {
+  Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (key === "search") {
-        query.where((q) =>
+        query.where((q: Knex.QueryInterface) =>
           q
             .whereILike("brand", `%${value}%`)
             .orWhereILike("model", `%${value}%`)
@@ -36,11 +66,6 @@ export const GetCars = async (filter: Partial<ICarEntity>) => {
       }
     }
   })
-
-  // Apply limit and offset
-  query.limit(filter.limit ?? 20)
-  query.offset(filter.offset ?? 0)
-
-  // Execute the query and return the results
-  return await query
 }
+
+export { db, CreateCar, DeleteCar, UpdateCar, GetCars }
