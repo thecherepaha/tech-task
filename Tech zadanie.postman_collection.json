@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "f0d1957f-dfff-4756-ae58-197af505bbbc",
+		"name": "Tech zadanie",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36696194"
+	},
+	"item": [
+		{
+			"name": "Генерация токена для пользователя",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": \"user1\"\n}\n//admins:\n// -- admin1\n// -- admin2\n//users:\n// -- user1\n// -- user2\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/token",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Список всех машин",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjcwMjU4MjQsImV4cCI6MTcyNzAyOTQyNH0.6hHuvr3JsIlJoJGpag61dCbzNJ8lZzHMOEXMRuSgdwc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/car",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"car"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2020",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить машину",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjcwMjU4MjQsImV4cCI6MTcyNzAyOTQyNH0.6hHuvr3JsIlJoJGpag61dCbzNJ8lZzHMOEXMRuSgdwc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"brand\": \"Lada\",\n    \"model\": \"14\",\n    \"year\": 2021,\n    \"color\": \"yellow\",\n    \"vin\": \"JH3YA3550HC305839\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/car",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"car"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Частичный перезапись данных машины",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"model\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/car/2be28676-c4d4-408c-9bb6-4c1fe1e890e6",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"car",
+						"2be28676-c4d4-408c-9bb6-4c1fe1e890e6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Удаление машины из базы",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/car/1",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"car",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		}
+	]
+}
